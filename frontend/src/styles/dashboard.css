@@ -1,0 +1,623 @@
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fb;
+  color: #0f1828;
+}
+
+.sidebar {
+  width: 240px;
+  padding: 24px;
+  background: #101828;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar .logo {
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.08em;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar button {
+  background: transparent;
+  color: inherit;
+  border: none;
+  text-align: left;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.sidebar button:hover {
+  color: #7dd3fc;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.top-actions button {
+  margin-left: 12px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 15px 35px rgba(15, 24, 40, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf0f7;
+  font-size: 0.9rem;
+}
+
+.session:last-child {
+  border-bottom: none;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+.status-green .chip {
+  background: #16a34a;
+}
+
+.status-amber .chip {
+  background: #fbbf24;
+}
+
+.status-red .chip {
+  background: #dc2626;
+}
+
+.chart-placeholder {
+  height: 140px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.substitution table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.substitution th,
+.substitution td {
+  text-align: left;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f7;
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.message-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.communications {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+textarea {
+  border: 1px solid #cdd5ee;
+  border-radius: 12px;
+  padding: 12px;
+  resize: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.ghost {
+  background: transparent;
+  color: #0f1828;
+  border: 1px solid #cdd5ee;
+}
+
+.ghost:hover {
+  background: #eef2ff;
+}
+
+.participant .sidebar {
+  background: #0f172a;
+}
+
+.participant-session {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.chip-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.chip.neutral {
+  background: #0f172a;
+}
+
+.small {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+}
+
+.slot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.slot {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+}
+
+.slot.active {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px #2563eb20;
+}
+
+.chat-preview {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 12px;
+  min-height: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fb;
+  color: #0f1828;
+}
+
+.sidebar {
+  width: 240px;
+  padding: 24px;
+  background: #101828;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar .logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar button {
+  background: transparent;
+  color: inherit;
+  border: none;
+  text-align: left;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.sidebar button:hover {
+  color: #7dd3fc;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-actions button {
+  margin-left: 12px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(15, 24, 40, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #edf0f7;
+  font-size: 0.9rem;
+}
+
+.session:last-child {
+  border-bottom: none;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+.status-green .chip {
+  background: #16a34a;
+}
+
+.status-amber .chip {
+  background: #fbbf24;
+}
+
+.status-red .chip {
+  background: #dc2626;
+}
+
+.chart-placeholder {
+  height: 140px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.substitution table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.substitution th,
+.substitution td {
+  text-align: left;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f7;
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.message-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.communications {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+textarea {
+  border: 1px solid #cdd5ee;
+  border-radius: 12px;
+  padding: 12px;
+  resize: none;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.ghost {
+  background: transparent;
+  color: #0f1828;
+  border: 1px solid #cdd5ee;
+}
+
+.ghost:hover {
+  background: #eef2ff;
+}
+.dashboard {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f7fb;
+  color: #0f1828;
+}
+
+.sidebar {
+  width: 240px;
+  padding: 24px;
+  background: #101828;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sidebar .logo {
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: 0.08em;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar button {
+  background: transparent;
+  color: inherit;
+  border: none;
+  text-align: left;
+  padding: 8px 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.sidebar button:hover {
+  color: #7dd3fc;
+}
+
+.content {
+  flex: 1;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.top-actions button {
+  margin-left: 12px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(15, 24, 40, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.session {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f7;
+  font-size: 0.9rem;
+}
+
+.session:last-child {
+  border-bottom: none;
+}
+
+.chip {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  color: #fff;
+}
+
+.status-green .chip {
+  background: #16a34a;
+}
+
+.status-amber .chip {
+  background: #fbbf24;
+}
+
+.status-red .chip {
+  background: #dc2626;
+}
+
+.chart-placeholder {
+  height: 140px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+}
+
+.substitution table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.substitution th,
+.substitution td {
+  text-align: left;
+  padding: 10px 0;
+  border-bottom: 1px solid #edf0f7;
+}
+
+.group-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.message-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.communications {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+textarea {
+  border: 1px solid #cdd5ee;
+  border-radius: 12px;
+  padding: 12px;
+  resize: none;
+  font-size: 0.95rem;
+}
+
+button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+

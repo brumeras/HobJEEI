@@ -128,3 +128,39 @@ If cancellation occurs <1h before:
 - Mark as urgent  
 - Send fast substitute request  
 - Notify coach separately  
+
+---
+
+## Workspace Layout (local repo)
+
+Alongside the Blazor/Razor project above, this repo now includes a full-stack playground with:
+
+- `backend/HobJEEI/`: original hackathon Blazor app (this repo’s earlier state).
+- `backend/HobJeei.Api`: placeholder ASP.NET Core Web API (to be scaffolded).
+- `backend/HobJeei.Api.Tests`: placeholder for backend unit/integration tests.
+- `frontend/`: React SPA prototype that visualizes the coach & participant dashboards.
+- `shared/contracts`: future home for shared DTOs/OpenAPI specs.
+- `docs/`: architecture and setup notes.
+
+### Getting started locally
+
+1. **React frontend**
+   ```
+   cd frontend
+   npm install
+   npm run dev
+   ```
+   Toggle between Coach/Participant dashboards from the UI.
+
+2. **Blazor backend**
+   ```
+   cd backend/HobJEEI/HobJEEI
+   dotnet run
+   ```
+   Serves the original Razor-based prototype.
+
+3. **Future Web API**
+   - `cd backend/HobJeei.Api && dotnet new webapi -n HobJeei.Api`
+   - Add EF Core, controllers, etc., as needed.
+
+Keep Razor views if you want server-rendered UI; otherwise expose JSON endpoints and let the React frontend handle the experience.
