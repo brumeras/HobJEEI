@@ -76,3 +76,13 @@
 /Users/semilija25/RiderProjects/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.pdb
 /Users/semilija25/RiderProjects/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.genruntimeconfig.cache
 /Users/semilija25/RiderProjects/HobJEEI/HobJEEI/obj/Debug/net9.0/ref/HobJEEI.dll
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/rpswa.dswa.cache.json
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.GeneratedMSBuildEditorConfig.editorconfig
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.AssemblyInfoInputs.cache
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.AssemblyInfo.cs
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.csproj.CoreCompileInputs.cache
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.MvcApplicationPartsAssemblyInfo.cache
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.sourcelink.json
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.dll
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/refint/HobJEEI.dll
+/Users/semilija25/Desktop/HobJEEI/HobJEEI/obj/Debug/net9.0/HobJEEI.pdb

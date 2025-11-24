@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/semilija25/RiderProjects/HobJEEI/HobJEEI/HobJEEI.csproj": {}
+    "/Users/semilija25/Desktop/HobJEEI/backend/HobJEEI/HobJEEI/HobJEEI.csproj": {}
   },
   "projects": {
-    "/Users/semilija25/RiderProjects/HobJEEI/HobJEEI/HobJEEI.csproj": {
+    "/Users/semilija25/Desktop/HobJEEI/backend/HobJEEI/HobJEEI/HobJEEI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/semilija25/RiderProjects/HobJEEI/HobJEEI/HobJEEI.csproj",
+        "projectUniqueName": "/Users/semilija25/Desktop/HobJEEI/backend/HobJEEI/HobJEEI/HobJEEI.csproj",
         "projectName": "HobJEEI",
-        "projectPath": "/Users/semilija25/RiderProjects/HobJEEI/HobJEEI/HobJEEI.csproj",
+        "projectPath": "/Users/semilija25/Desktop/HobJEEI/backend/HobJEEI/HobJEEI/HobJEEI.csproj",
         "packagesPath": "/Users/semilija25/.nuget/packages/",
-        "outputPath": "/Users/semilija25/RiderProjects/HobJEEI/HobJEEI/obj/",
+        "outputPath": "/Users/semilija25/Desktop/HobJEEI/backend/HobJEEI/HobJEEI/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/semilija25/.nuget/NuGet/NuGet.Config"
