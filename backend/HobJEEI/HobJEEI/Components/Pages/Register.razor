@@ -1,0 +1,532 @@
+@page "/register"
+@layout AuthLayout
+@using System
+@using HobJeei.Services
+@using HobJeei.Models
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Register - HobJEEI</PageTitle>
+
+<div class="register-container">
+    <div class="register-card">
+        <div class="logo-section">
+            <span class="logo-icon">🎯</span>
+            <h1>Create Account</h1>
+        </div>
+        <p class="subtitle">Choose your account type and get started</p>
+
+        <div class="account-type-selector">
+            <button class="type-btn @(selectedType == "company" ? "active" : "")" 
+                    @onclick="@(() => SelectType("company"))">
+                <span class="icon">🏢</span>
+                <span>Company</span>
+                <p>Upload and manage hobby groups</p>
+            </button>
+            <button class="type-btn @(selectedType == "customer" ? "active" : "")" 
+                    @onclick="@(() => SelectType("customer"))">
+                <span class="icon">👤</span>
+                <span>Customer</span>
+                <p>Join and participate in groups</p>
+            </button>
+        </div>
+
+        @if (selectedType == "company")
+        {
+            <div class="form-section">
+                <h2>Company Registration</h2>
+                <div class="form-group">
+                    <label>Company Name *</label>
+                    <input type="text" @bind="companyName" @bind:event="oninput" 
+                           placeholder="Enter company name" />
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" @bind="email" @bind:event="oninput" 
+                           placeholder="company@example.com" />
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" @bind="password" @bind:event="oninput" 
+                           placeholder="Minimum 6 characters" />
+                </div>
+                <div class="form-group">
+                    <label>Contact Person</label>
+                    <input type="text" @bind="contactPerson" @bind:event="oninput" 
+                           placeholder="Full name" />
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" @bind="phoneNumber" @bind:event="oninput" 
+                           placeholder="+370..." />
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" @bind="address" @bind:event="oninput" 
+                           placeholder="Company address" />
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="error-message">
+                        <span>⚠️</span>
+                        <span>@errorMessage</span>
+                    </div>
+                }
+                <button type="button" class="submit-btn" @onclick="RegisterCompany" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span>🔄 Registering...</span>
+                    }
+                    else
+                    {
+                        <span>Register as Company</span>
+                    }
+                </button>
+            </div>
+        }
+        else if (selectedType == "customer")
+        {
+            <div class="form-section">
+                <h2>Customer Registration</h2>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>First Name *</label>
+                        <input type="text" @bind="firstName" @bind:event="oninput" 
+                               placeholder="John" />
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name *</label>
+                        <input type="text" @bind="lastName" @bind:event="oninput" 
+                               placeholder="Doe" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Email *</label>
+                    <input type="email" @bind="email" @bind:event="oninput" 
+                           placeholder="customer@example.com" />
+                </div>
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" @bind="password" @bind:event="oninput" 
+                           placeholder="Minimum 6 characters" />
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" @bind="phoneNumber" @bind:event="oninput" 
+                           placeholder="+370..." />
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" @bind="dateOfBirth" @bind:event="oninput" />
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="error-message">
+                        <span>⚠️</span>
+                        <span>@errorMessage</span>
+                    </div>
+                }
+                <button type="button" class="submit-btn" @onclick="RegisterCustomer" disabled="@isLoading">
+                    @if (isLoading)
+                    {
+                        <span>🔄 Registering...</span>
+                    }
+                    else
+                    {
+                        <span>Register as Customer</span>
+                    }
+                </button>
+            </div>
+        }
+        else
+        {
+            <div class="form-section selection-prompt">
+                <p>👆 Please select an account type above to continue</p>
+            </div>
+        }
+
+        <div class="login-link">
+            <p>Already have an account? <a href="/login">Login here</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string selectedType = "";
+    private string email = "";
+    private string password = "";
+    private bool isLoading = false;
+    private string errorMessage = "";
+
+    // Company fields
+    private string companyName = "";
+    private string contactPerson = "";
+    private string phoneNumber = "";
+    private string address = "";
+
+    // Customer fields
+    private string firstName = "";
+    private string lastName = "";
+    private DateTime? dateOfBirth = null;
+
+    protected override void OnInitialized()
+    {
+        var (userId, _) = AuthService.GetCurrentUser();
+        if (userId.HasValue)
+        {
+            Navigation.NavigateTo("/welcome", forceLoad: true);
+        }
+    }
+
+    private void SelectType(string type)
+    {
+        selectedType = type;
+        errorMessage = "";
+        // Clear all fields when switching types
+        email = "";
+        password = "";
+        companyName = "";
+        contactPerson = "";
+        phoneNumber = "";
+        address = "";
+        firstName = "";
+        lastName = "";
+        dateOfBirth = null;
+        StateHasChanged();
+    }
+
+    private async Task RegisterCompany()
+    {
+        errorMessage = "";
+        StateHasChanged();
+        
+        if (string.IsNullOrWhiteSpace(companyName) || string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please fill in all required fields.";
+            StateHasChanged();
+            return;
+        }
+
+        if (password.Length < 6)
+        {
+            errorMessage = "Password must be at least 6 characters long.";
+            StateHasChanged();
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+        
+        try
+        {
+            var company = await AuthService.RegisterCompanyAsync(email, password, companyName, contactPerson, phoneNumber, address);
+            if (company != null)
+            {
+                AuthService.SetUserSession(company);
+                await Task.Delay(100);
+                Navigation.NavigateTo("/welcome", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = "Email already exists. Please use a different email.";
+                isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred during registration: {ex.Message}";
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+
+    private async Task RegisterCustomer()
+    {
+        errorMessage = "";
+        StateHasChanged();
+        
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName) || 
+            string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please fill in all required fields.";
+            StateHasChanged();
+            return;
+        }
+
+        if (password.Length < 6)
+        {
+            errorMessage = "Password must be at least 6 characters long.";
+            StateHasChanged();
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+        
+        try
+        {
+            var customer = await AuthService.RegisterCustomerAsync(email, password, firstName, lastName, phoneNumber, dateOfBirth);
+            if (customer != null)
+            {
+                AuthService.SetUserSession(customer);
+                await Task.Delay(100);
+                Navigation.NavigateTo("/welcome", forceLoad: true);
+            }
+            else
+            {
+                errorMessage = "Email already exists. Please use a different email.";
+                isLoading = false;
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"An error occurred during registration: {ex.Message}";
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
+
+<style>
+    .register-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+
+    .register-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        max-width: 600px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.4s ease;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .register-card h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: #6b7280;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .account-type-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .type-btn {
+        padding: 1.5rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+        color: #1f2937;
+    }
+
+    .type-btn:hover {
+        border-color: #6366f1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .type-btn.active {
+        border-color: #6366f1;
+        background: #6366f1;
+        color: white;
+    }
+
+    .type-btn .icon {
+        font-size: 2rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .type-btn span:not(.icon) {
+        font-weight: 600;
+        font-size: 1.1rem;
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .type-btn p {
+        font-size: 0.875rem;
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    .form-section {
+        margin-top: 2rem;
+    }
+
+    .selection-prompt {
+        text-align: center;
+        padding: 2rem;
+        color: #6b7280;
+        font-size: 1.1rem;
+    }
+
+    .form-section h2 {
+        font-size: 1.5rem;
+        margin-bottom: 1.5rem;
+        color: #1f2937;
+    }
+
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        background: #6366f1;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+        background: #4f46e5;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .error-message {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border: 1px solid #fecaca;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: shake 0.3s ease;
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .login-link {
+        margin-top: 2rem;
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .login-link p {
+        color: #6b7280;
+    }
+
+    .login-link a {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .login-link a:hover {
+        color: #4f46e5;
+        text-decoration: underline;
+    }
+
+    @@media (max-width: 768px) {
+        .account-type-selector {
+            grid-template-columns: 1fr;
+        }
+
+        .form-row {
+            grid-template-columns: 1fr;
+        }
+
+        .register-card {
+            padding: 1.5rem;
+        }
+
+        .register-card h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>

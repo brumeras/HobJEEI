@@ -1,0 +1,365 @@
+@page "/login"
+@layout AuthLayout
+@using HobJeei.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Login - HobJEEI</PageTitle>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="logo-section">
+            <span class="logo-icon">🎯</span>
+            <h1>Welcome Back</h1>
+        </div>
+        <p class="subtitle">Login to your account</p>
+
+        <div class="account-type-selector">
+            <button class="type-btn @(selectedType == "company" ? "active" : "")" 
+                    @onclick="@(() => SelectType("company"))">
+                <span class="icon">🏢</span>
+                <span>Company</span>
+            </button>
+            <button class="type-btn @(selectedType == "customer" ? "active" : "")" 
+                    @onclick="@(() => SelectType("customer"))">
+                <span class="icon">👤</span>
+                <span>Customer</span>
+            </button>
+        </div>
+
+        <div class="form-section">
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" 
+                       @bind="email" 
+                       @bind:event="oninput"
+                       placeholder="your@email.com" 
+                       @onkeypress="HandleKeyPress" />
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" 
+                       @bind="password" 
+                       @bind:event="oninput"
+                       placeholder="Enter your password" 
+                       @onkeypress="HandleKeyPress" />
+            </div>
+            
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="error-message">
+                    <span>⚠️</span>
+                    <span>@errorMessage</span>
+                </div>
+            }
+            
+            <button class="submit-btn" @onclick="HandleLogin" disabled="@isLoading">
+                @if (isLoading)
+                {
+                    <span>🔄 Logging in...</span>
+                }
+                else
+                {
+                    <span>Login</span>
+                }
+            </button>
+        </div>
+
+        <div class="register-link">
+            <p>Don't have an account? <a href="/register">Register here</a></p>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string selectedType = "customer";
+    private string email = "";
+    private string password = "";
+    private bool isLoading = false;
+    private string errorMessage = "";
+
+    protected override void OnInitialized()
+    {
+        var (userId, _) = AuthService.GetCurrentUser();
+        if (userId.HasValue)
+        {
+            Navigation.NavigateTo("/welcome", forceLoad: true);
+        }
+    }
+
+    private void SelectType(string type)
+    {
+        selectedType = type;
+        errorMessage = "";
+    }
+
+    private void HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !isLoading)
+        {
+            _ = HandleLogin(); // Fire and forget pattern
+        }
+    }
+
+    private async Task HandleLogin()
+    {
+        errorMessage = "";
+        
+        if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
+        {
+            errorMessage = "Please enter both email and password.";
+            return;
+        }
+
+        isLoading = true;
+        StateHasChanged();
+        
+        try
+        {
+            if (selectedType == "company")
+            {
+                var company = await AuthService.LoginCompanyAsync(email, password);
+                if (company != null)
+                {
+                    AuthService.SetUserSession(company);
+                    await Task.Delay(100);
+                    Navigation.NavigateTo("/welcome", forceLoad: true);
+                }
+                else
+                {
+                    errorMessage = "Invalid email or password.";
+                    isLoading = false;
+                    StateHasChanged();
+                }
+            }
+            else
+            {
+                var customer = await AuthService.LoginCustomerAsync(email, password);
+                if (customer != null)
+                {
+                    AuthService.SetUserSession(customer);
+                    await Task.Delay(100);
+                    Navigation.NavigateTo("/welcome", forceLoad: true);
+                }
+                else
+                {
+                    errorMessage = "Invalid email or password.";
+                    isLoading = false;
+                    StateHasChanged();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred during login. Please try again.";
+            isLoading = false;
+            StateHasChanged();
+        }
+    }
+}
+
+<style>
+    .login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+
+    .login-card {
+        background: white;
+        border-radius: 16px;
+        padding: 2.5rem;
+        max-width: 450px;
+        width: 100%;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        animation: slideUp 0.4s ease;
+    }
+
+    @@keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .logo-section {
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .logo-icon {
+        font-size: 3rem;
+        display: block;
+        margin-bottom: 1rem;
+    }
+
+    .login-card h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #1f2937;
+        text-align: center;
+    }
+
+    .subtitle {
+        color: #6b7280;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .account-type-selector {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .type-btn {
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        background: white;
+        cursor: pointer;
+        transition: all 0.3s;
+        text-align: center;
+    }
+
+    .type-btn:hover {
+        border-color: #6366f1;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .type-btn.active {
+        border-color: #6366f1;
+        background: #6366f1;
+        color: white;
+    }
+
+    .type-btn .icon {
+        font-size: 1.5rem;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .type-btn span:not(.icon) {
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .form-section {
+        margin-top: 1rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.2s;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 0.875rem;
+        background: #6366f1;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 1rem;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+        background: #4f46e5;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    .error-message {
+        background: #fee2e2;
+        color: #dc2626;
+        padding: 0.75rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        border: 1px solid #fecaca;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        animation: shake 0.3s ease;
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .register-link {
+        margin-top: 2rem;
+        text-align: center;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .register-link p {
+        color: #6b7280;
+    }
+
+    .register-link a {
+        color: #6366f1;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s;
+    }
+
+    .register-link a:hover {
+        color: #4f46e5;
+        text-decoration: underline;
+    }
+
+    @@media (max-width: 768px) {
+        .login-card {
+            padding: 1.5rem;
+        }
+
+        .login-card h1 {
+            font-size: 1.5rem;
+        }
+    }
+</style>

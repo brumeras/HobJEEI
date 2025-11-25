@@ -3,6 +3,7 @@ namespace HobJeei.Models
     public class HobbyGroup
     {
         public int Id { get; set; }
+        public int CompanyId { get; set; } // Foreign key to Company
         public string Name { get; set; } = "";
         public string HobbyType { get; set; } = "";
         public string CoachName { get; set; } = "";

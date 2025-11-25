@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HobJEEI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1e1ca0efe1ca11104f10360dcda922ceb5054148")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+966c2cf3507ef1cf21a9191f8105d774d6735ab0")]
 [assembly: System.Reflection.AssemblyProductAttribute("HobJEEI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HobJEEI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,8 +1,20 @@
-﻿<div class="nav-menu">
+﻿@using HobJeei.Services
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="nav-menu">
     <div class="logo">
         <span class="logo-icon">🎯</span>
         <span class="logo-text">HobbyHub</span>
     </div>
+
+    @if (isLoggedIn)
+    {
+        <div class="user-info">
+            <span class="user-type">@userType</span>
+            <span class="user-email">@userEmail</span>
+        </div>
+    }
 
     <nav class="nav-links">
         <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
@@ -10,15 +22,35 @@
             <span>Discover</span>
         </NavLink>
 
-        <NavLink class="nav-link" href="mygroups">
-            <span class="icon">👥</span>
-            <span>My Groups</span>
-        </NavLink>
+        @if (isLoggedIn)
+        {
+            <NavLink class="nav-link" href="mygroups">
+                <span class="icon">👥</span>
+                <span>My Groups</span>
+            </NavLink>
 
-        <NavLink class="nav-link" href="profile">
-            <span class="icon">👤</span>
-            <span>Profile</span>
-        </NavLink>
+            <NavLink class="nav-link" href="profile">
+                <span class="icon">👤</span>
+                <span>Profile</span>
+            </NavLink>
+
+            <button class="nav-link logout-btn" @onclick="Logout">
+                <span class="icon">🚪</span>
+                <span>Logout</span>
+            </button>
+        }
+        else
+        {
+            <NavLink class="nav-link" href="login">
+                <span class="icon">🔐</span>
+                <span>Login</span>
+            </NavLink>
+
+            <NavLink class="nav-link" href="register">
+                <span class="icon">📝</span>
+                <span>Register</span>
+            </NavLink>
+        }
     </nav>
 </div>
 
@@ -78,4 +110,59 @@
     .nav-link .icon {
         font-size: 1.25rem;
     }
+
+    .user-info {
+        padding: 1rem 1.5rem;
+        margin-bottom: 1rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .user-type {
+        font-weight: 600;
+        color: var(--primary);
+        font-size: 0.875rem;
+        text-transform: uppercase;
+    }
+
+    .user-email {
+        font-size: 0.75rem;
+        color: var(--text-light);
+    }
+
+    .logout-btn {
+        width: 100%;
+        text-align: left;
+    }
 </style>
+
+@code {
+    private bool isLoggedIn = false;
+    private string userType = "";
+    private string userEmail = "";
+
+    protected override void OnInitialized()
+    {
+        CheckAuthStatus();
+    }
+
+    private void CheckAuthStatus()
+    {
+        var (userId, type) = AuthService.GetCurrentUser();
+        isLoggedIn = userId.HasValue;
+        userType = type ?? "";
+        
+        if (isLoggedIn)
+        {
+            userEmail = AuthService.GetUserEmail() ?? "";
+        }
+    }
+
+    private void Logout()
+    {
+        AuthService.ClearUserSession();
+        Navigation.NavigateTo("/login", forceLoad: true);
+    }
+}

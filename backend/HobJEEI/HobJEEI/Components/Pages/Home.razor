@@ -4,95 +4,124 @@
 @rendermode InteractiveServer
 @inject MockDataService DataService
 @inject NavigationManager Navigation
+@inject AuthService AuthService
 
-<PageTitle>Discover - HobbyHub</PageTitle>
+<PageTitle>@(isCompany ? "Manage Groups" : "Discover") - HobbyHub</PageTitle>
 
-<div class="hero">
-    <h1>Discover Your Next Hobby</h1>
-    <p>Find and join local hobby groups in Vilnius</p>
-</div>
-
-<div class="filters">
-    <div class="filter-group">
-        <label>Hobby Type:</label>
-        <select class="filter-select" @bind="selectedType" @bind:after="FilterGroups">
-            <option value="">All Types</option>
-            @foreach (var type in hobbyTypes)
-            {
-                <option value="@type">@type</option>
-            }
-        </select>
-
-        <label>Distance:</label>
-        <select class="filter-select" @bind="selectedDistance">
-            <option value="0">Any Distance</option>
-            <option value="1">Within 1 km</option>
-            <option value="3">Within 3 km</option>
-            <option value="5">Within 5 km</option>
-        </select>
-
-        <label>Max Price:</label>
-        <input type="number" class="filter-input" @bind="maxPrice" @bind:after="FilterGroups" placeholder="€ per session" min="0" step="5">
+@if (!isAuthenticated)
+{
+    <div class="auth-required">
+        <h1>Welcome to HobbyHub</h1>
+        <p>Please login to continue</p>
+        <a href="/login" class="btn-primary">Go to Login</a>
     </div>
-</div>
-
-<div class="map-container">
-    <h2>Hobbies Near You</h2>
-    <div class="mock-map">
-        <div style="transform: rotate(45deg);">📍 Interactive Map View</div>
-        <div class="map-marker" style="top: 20%; left: 30%;"></div>
-        <div class="map-marker" style="top: 40%; left: 60%;"></div>
-        <div class="map-marker" style="top: 65%; left: 45%;"></div>
-        <div class="map-marker" style="top: 50%; left: 75%;"></div>
-    </div>
-</div>
-
-<h2 style="margin: 2rem 0 1rem 0;">Available Groups</h2>
-<div class="groups-grid">
-    @foreach (var group in filteredGroups)
-    {
-        <div class="group-card" @onclick="() => NavigateToGroup(group.Id)">
-            <div class="group-header">
-                <div class="group-name">@group.Name</div>
-                <div class="hobby-badge">@group.HobbyType</div>
-            </div>
-
-            <div class="group-info">
-                <div class="info-row">
-                    <span class="icon">👤</span>
-                    <span>Coach: @group.CoachName</span>
-                </div>
-                <div class="info-row">
-                    <span class="icon">📍</span>
-                    <span>@group.Location</span>
-                </div>
-                <div class="info-row">
-                    <span class="icon">📅</span>
-                    <span>@group.Schedule</span>
-                </div>
-                <div class="info-row">
-                    <span class="icon">💰</span>
-                    <span>€@group.Price per session</span>
-                </div>
-            </div>
-
-            <div class="group-stats">
-                <div class="stat">
-                    <div class="stat-value">@group.CurrentMembers/@group.MaxMembers</div>
-                    <div class="stat-label">Members</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-value">@group.UpcomingSessions.Count</div>
-                    <div class="stat-label">Sessions</div>
-                </div>
-            </div>
-
-            <button class="btn" @onclick:stopPropagation="true" @onclick="() => JoinGroup(group.Name)">
-                Join Group
-            </button>
+}
+else if (isCompany)
+{
+    <!-- Company View -->
+    <div class="company-dashboard">
+        <div class="dashboard-header">
+            <h1>Manage Your Hobby Groups</h1>
+            <p>Welcome, @companyName!</p>
+            <button class="btn-primary" @onclick="CreateNewGroup">+ Create New Group</button>
         </div>
-    }
-</div>
+        
+        <div class="groups-section">
+            <h2>Your Groups</h2>
+            <p>Here you can manage all your hobby groups (Coming soon)</p>
+        </div>
+    </div>
+}
+else
+{
+    <!-- Customer View (Original) -->
+    <div class="hero">
+        <h1>Discover Your Next Hobby</h1>
+        <p>Find and join local hobby groups in Vilnius</p>
+    </div>
+
+    <div class="filters">
+        <div class="filter-group">
+            <label>Hobby Type:</label>
+            <select class="filter-select" @bind="selectedType" @bind:after="FilterGroups">
+                <option value="">All Types</option>
+                @foreach (var type in hobbyTypes)
+                {
+                    <option value="@type">@type</option>
+                }
+            </select>
+
+            <label>Distance:</label>
+            <select class="filter-select" @bind="selectedDistance">
+                <option value="0">Any Distance</option>
+                <option value="1">Within 1 km</option>
+                <option value="3">Within 3 km</option>
+                <option value="5">Within 5 km</option>
+            </select>
+
+            <label>Max Price:</label>
+            <input type="number" class="filter-input" @bind="maxPrice" @bind:after="FilterGroups" placeholder="€ per session" min="0" step="5">
+        </div>
+    </div>
+
+    <div class="map-container">
+        <h2>Hobbies Near You</h2>
+        <div class="mock-map">
+            <div style="transform: rotate(45deg);">📍 Interactive Map View</div>
+            <div class="map-marker" style="top: 20%; left: 30%;"></div>
+            <div class="map-marker" style="top: 40%; left: 60%;"></div>
+            <div class="map-marker" style="top: 65%; left: 45%;"></div>
+            <div class="map-marker" style="top: 50%; left: 75%;"></div>
+        </div>
+    </div>
+
+    <h2 style="margin: 2rem 0 1rem 0;">Available Groups</h2>
+    <div class="groups-grid">
+        @foreach (var group in filteredGroups)
+        {
+            <div class="group-card" @onclick="() => NavigateToGroup(group.Id)">
+                <div class="group-header">
+                    <div class="group-name">@group.Name</div>
+                    <div class="hobby-badge">@group.HobbyType</div>
+                </div>
+
+                <div class="group-info">
+                    <div class="info-row">
+                        <span class="icon">👤</span>
+                        <span>Coach: @group.CoachName</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">📍</span>
+                        <span>@group.Location</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">📅</span>
+                        <span>@group.Schedule</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="icon">💰</span>
+                        <span>€@group.Price per session</span>
+                    </div>
+                </div>
+
+                <div class="group-stats">
+                    <div class="stat">
+                        <div class="stat-value">@group.CurrentMembers/@group.MaxMembers</div>
+                        <div class="stat-label">Members</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-value">@group.UpcomingSessions.Count</div>
+                        <div class="stat-label">Sessions</div>
+                    </div>
+                </div>
+
+                <button class="btn" @onclick:stopPropagation="true" @onclick="() => JoinGroup(group.Name)">
+                    Join Group
+                </button>
+            </div>
+        }
+    </div>
+}
 
 @code {
     private List<HobbyGroup> allGroups = new();
@@ -102,12 +131,39 @@
     private string selectedType = "";
     private int selectedDistance = 0;
     private decimal? maxPrice = null;
+    private bool isAuthenticated = false;
+    private bool isCompany = false;
+    private string? companyName;
+    private string? customerName;
 
     protected override void OnInitialized()
     {
-        allGroups = DataService.GetAllGroups();
-        filteredGroups = allGroups;
-        hobbyTypes = allGroups.Select(g => g.HobbyType).Distinct().ToList();
+        var (userId, userType) = AuthService.GetCurrentUser();
+        isAuthenticated = userId.HasValue;
+
+        if (!isAuthenticated)
+        {
+            return;
+        }
+
+        isCompany = userType == "Company";
+        
+        if (isCompany)
+        {
+            companyName = AuthService.GetCompanyName() ?? "Company";
+        }
+        else
+        {
+            customerName = AuthService.GetCustomerName() ?? "Customer";
+            allGroups = DataService.GetAllGroups();
+            filteredGroups = allGroups;
+            hobbyTypes = allGroups.Select(g => g.HobbyType).Distinct().ToList();
+        }
+    }
+
+    private void CreateNewGroup()
+    {
+        // TODO: Navigate to create group page
     }
 
     private void FilterGroups()
@@ -130,6 +186,83 @@
 }
 
 <style>
+    .auth-required {
+        min-height: 70vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 2rem;
+    }
+
+    .auth-required h1 {
+        font-size: 3rem;
+        color: var(--text);
+    }
+
+    .auth-required p {
+        font-size: 1.5rem;
+        color: var(--text-light);
+    }
+
+    .btn-primary {
+        padding: 0.875rem 2rem;
+        background: var(--primary);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+    }
+
+    .company-dashboard {
+        padding: 2rem 0;
+    }
+
+    .dashboard-header {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 2rem;
+        margin: 0;
+    }
+
+    .dashboard-header p {
+        color: var(--text-light);
+        margin: 0.5rem 0 0 0;
+    }
+
+    .groups-section {
+        background: var(--card-bg);
+        padding: 2rem;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .groups-section h2 {
+        margin-top: 0;
+    }
+
     .hero {
         text-align: center;
         padding: 2rem 0 3rem 0;
@@ -329,13 +462,18 @@
         background: var(--primary-dark);
     }
 
-    @media (max-width: 768px) {
+    @@media (max-width: 768px) {
         .groups-grid {
             grid-template-columns: 1fr;
         }
 
         .hero h1 {
             font-size: 2rem;
+        }
+
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
         }
     }
 </style>
